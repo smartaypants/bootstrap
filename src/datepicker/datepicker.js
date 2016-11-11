@@ -521,7 +521,7 @@ function(scope, element, attrs, $compile, $parse, $document, $rootScope, $positi
   var self = this;
   var cache = {},
     isHtml5DateInput = false;
-  var dateFormat, closeOnDateSelection, appendToBody, onOpenFocus,
+  var dateFormat, dateParserFormat, closeOnDateSelection, appendToBody, onOpenFocus,
     datepickerPopupTemplateUrl, datepickerTemplateUrl, popupEl, datepickerEl,
     ngModel, $popup;
 
@@ -560,6 +560,8 @@ function(scope, element, attrs, $compile, $parse, $document, $rootScope, $positi
     if (!dateFormat) {
       throw new Error('uibDatepickerPopup must have a date format specified.');
     }
+
+	dateParserFormat =  angular.isDefined(attrs.dateParserFormat) ? attrs.dateParserFormat : dateFormat;
 
     if (isHtml5DateInput && attrs.datepickerPopup) {
       throw new Error('HTML5 date input types do not support custom formats.');
@@ -766,7 +768,7 @@ function(scope, element, attrs, $compile, $parse, $document, $rootScope, $positi
     } else if (angular.isDate(viewValue) && !isNaN(viewValue)) {
       return viewValue;
     } else if (angular.isString(viewValue)) {
-      var date = dateParser.parse(viewValue, dateFormat, scope.date);
+      var date = dateParser.parse(viewValue, dateParserFormat, scope.date);
       if (isNaN(date)) {
         return undefined;
       } else {
